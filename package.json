@@ -1,0 +1,25 @@
+{
+  "name": "todo-app",
+  "version": "1.0.0",
+  "description": "This is the simple todo application with the backend (mongoDB) along with the user authorization and authentication. ",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/venu-RAW/node-todo-app.git"
+  },
+  "keywords": [
+    "todo-app",
+    "todo",
+    "user",
+    "authentication"
+  ],
+  "author": "venu sirpuram",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/venu-RAW/node-todo-app/issues"
+  },
+  "homepage": "https://github.com/venu-RAW/node-todo-app#readme"
+}
