@@ -3,7 +3,7 @@ const router = require("express").Router();
 const {
 	getTasks,
 	addTasks,
-	updateTasks,
+	updateTaskById,
 	getTaskById,
 	deleteTaskById,
 } = require("../controllers/tasksController.js");
@@ -13,7 +13,7 @@ router.route("/tasks").get(getTasks).post(addTasks);
 router
 	.route("/tasks/:taskId")
 	.get(getTaskById)
-	.put(updateTasks)
+	.put(updateTaskById)
 	.delete(deleteTaskById);
 
 module.exports = router;

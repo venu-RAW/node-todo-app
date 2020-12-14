@@ -5,15 +5,25 @@ const taskSchema = new mongoose.Schema({
 	taskId: {
 		type: String,
 		default: uniqid(),
+		unique: true,
 	},
 	taskName: {
 		type: String,
-		required: [true, "Please input the task"], // required in in-build validator
+		required: [true, "Please input task"], // required in in-build validator
 		validate: {
 			validator: function () {
 				return this.taskName.trim().length;
 			},
 			message: "Task name should not be empty",
+		},
+		validate: {
+			validator: function () {
+				const re = /<("[^"]*?"|'[^']*?'|[^'">])*>/;
+				if (re.test(this.taskName)) {
+					return false;
+				}
+			},
+			message: "Task content cannot be HTML",
 		},
 	},
 	status: {

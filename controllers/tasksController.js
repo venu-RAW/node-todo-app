@@ -1,8 +1,10 @@
 const Task = require("../models/taskSchema.js");
+const sendResponse = require("../helpers/sendResponse.js");
+const sendError = require("../helpers/sendError.js");
 
 const getTasks = async (req, res) => {
 	const allTasks = await Task.find();
-	res.send(allTasks);
+	sendResponse(200, "Success", allTasks, req, res);
 };
 
 const addTasks = async (req, res) => {
@@ -12,11 +14,16 @@ const addTasks = async (req, res) => {
 
 	try {
 		newTask = await newtask.save();
+		sendResponse(200, "Task added successfully", newTask, req, res);
 	} catch (err) {
-		console.error(err);
+		sendError(
+			400,
+			"Adding of task failed",
+			err.errors.taskName.message,
+			req,
+			res
+		);
 	}
-
-	res.send("data added successfully");
 };
 
 const getTaskById = async (req, res) => {
@@ -24,23 +31,35 @@ const getTaskById = async (req, res) => {
 
 	try {
 		let task = await Task.find({ taskId });
-		res.send(task);
+		sendResponse(200, "Success", task, req, res);
 	} catch (err) {
-		console.error(err);
+		sendError(
+			401,
+			"Cannot get task by given id",
+			err.errors.taskName.message,
+			req,
+			res
+		);
 	}
 };
 
-const updateTasks = async (req, res) => {
+const updateTaskById = async (req, res) => {
 	const { taskId } = req.params;
 
-	try {
-		let task = await Task.updateOne(
-			{ taskId: taskId },
-			{ $set: { taskName: req.body.taskName } }
-		);
-		res.send(task);
-	} catch (err) {
-		console.error(err);
+	const re = /<("[^"]*?"|'[^']*?'|[^'">])*>/;
+
+	if (re.test(req.body.taskName)) {
+		sendError(400, "unsuccessful", "Taskname cannot be HTML", req, res);
+	} else {
+		try {
+			let task = await Task.updateOne(
+				{ taskId: taskId },
+				{ $set: { taskName: req.body.taskName } }
+			);
+			sendResponse(200, "Success", task, req, res);
+		} catch (err) {
+			sendError(400, "Cannot update task by given id", err, req, res);
+		}
 	}
 };
 
@@ -48,17 +67,17 @@ const deleteTaskById = async (req, res) => {
 	const { taskId } = req.params;
 
 	try {
-		await Task.deleteOne({ taskId });
-		res.send("task deleted successfully");
+		let deletedTask = await Task.deleteOne({ taskId });
+		sendResponse(200, "Task deleted", deletedTask, req, res);
 	} catch (err) {
-		console.error(err);
+		sendError(400, "Cannot delete task by given id", err, req, res);
 	}
 };
 
 module.exports = {
 	getTasks,
 	addTasks,
-	updateTasks,
+	updateTaskById,
 	getTaskById,
 	deleteTaskById,
 };

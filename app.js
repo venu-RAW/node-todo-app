@@ -12,8 +12,13 @@ dotenv.config({
 // DB CONNECTION
 mongoose.connect(
 	process.env.DB_URL,
-	{ useNewUrlParser: true, useUnifiedTopology: true },
-	(err, connection) => {
+	{
+		useNewUrlParser: true,
+		useUnifiedTopology: true,
+		useFindAndModify: false,
+		useCreateIndex: true,
+	},
+	(err) => {
 		if (err) {
 			console.log("Could not connect to database.");
 		}
