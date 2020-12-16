@@ -6,7 +6,7 @@ const taskRoute = require("./routes/taskRoute.js");
 
 // CONFIGURATIONS
 dotenv.config({
-	path: "./config.env",
+	path: `${__dirname}/config.env`,
 });
 
 // DB CONNECTION

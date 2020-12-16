@@ -2,9 +2,25 @@ const Task = require("../models/taskSchema.js");
 const sendResponse = require("../helpers/sendResponse.js");
 const sendError = require("../helpers/sendError.js");
 
+// GET ALL TASK OR GET THE TASK BY QUERY PARAMETER
 const getTasks = async (req, res) => {
-	const allTasks = await Task.find();
-	sendResponse(200, "Success", allTasks, req, res);
+	if (Object.keys(req.query).length !== 0) {
+		let task = await Task.find(req.query);
+		if (task < 1) {
+			sendError(
+				404,
+				"Unsuccessful",
+				"Task not found with given query",
+				req,
+				res
+			);
+		} else {
+			sendResponse(200, "Successful", task, req, res);
+		}
+	} else {
+		const allTasks = await Task.find();
+		sendResponse(200, "Success", allTasks, req, res);
+	}
 };
 
 const addTasks = async (req, res) => {
@@ -54,7 +70,9 @@ const updateTaskById = async (req, res) => {
 		try {
 			let task = await Task.updateOne(
 				{ taskId: taskId },
-				{ $set: { taskName: req.body.taskName } }
+				{
+					$set: { taskName: req.body.taskName },
+				}
 			);
 			sendResponse(200, "Success", task, req, res);
 		} catch (err) {
@@ -67,8 +85,8 @@ const deleteTaskById = async (req, res) => {
 	const { taskId } = req.params;
 
 	try {
-		let deletedTask = await Task.deleteOne({ taskId });
-		sendResponse(200, "Task deleted", deletedTask, req, res);
+		await Task.deleteOne({ taskId });
+		sendResponse(204, "Task deleted", null, req, res);
 	} catch (err) {
 		sendError(400, "Cannot delete task by given id", err, req, res);
 	}
