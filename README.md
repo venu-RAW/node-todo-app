@@ -37,7 +37,7 @@ QUICK NOTE: The current working directory (i.e. cwd) should always be the root d
 
       11.A.] To GET all the tasks [ GET REQUEST ]
 
-      http://localhost:5000/todos/tasks
+         http://localhost:5000/todos/tasks
 
 Note: Replace the Port 5000 with your port number and make the request.
 
