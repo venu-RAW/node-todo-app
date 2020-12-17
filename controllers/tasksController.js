@@ -5,7 +5,7 @@ const sendError = require("../helpers/sendError.js");
 // GET ALL TASK OR GET THE TASK BY QUERY PARAMETER
 const getTasks = async (req, res) => {
 	if (Object.keys(req.query).length !== 0) {
-		let task = await Task.find(req.query);
+		let task = await Task.find(req.query).select("-_id");
 		if (task < 1) {
 			sendError(
 				404,
@@ -18,7 +18,7 @@ const getTasks = async (req, res) => {
 			sendResponse(200, "Successful", task, req, res);
 		}
 	} else {
-		const allTasks = await Task.find();
+		const allTasks = await Task.find().select("-_id");
 		sendResponse(200, "Success", allTasks, req, res);
 	}
 };
@@ -72,6 +72,9 @@ const updateTaskById = async (req, res) => {
 				{ taskId: taskId },
 				{
 					$set: { taskName: req.body.taskName },
+				},
+				{
+					runValidators: true,
 				}
 			);
 			sendResponse(200, "Success", task, req, res);
